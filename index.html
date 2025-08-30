@@ -24,10 +24,9 @@
     @keyframes flash { from { box-shadow: 0 0 18px #f97316; } to { box-shadow: 0 0 0 transparent; } }
   </style>
 
-    <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
-    <link rel="manifest" href="manifest.json">
-    <meta name="theme-color" content="#f97316">
-    
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#f97316">
 </head>
 <body class="bg-black text-neutral-100 font-mono">
   <!-- Header fixo -->
@@ -38,7 +37,6 @@
       <a href="#funciona" class="hover:text-orange-500 flex items-center gap-1"><i data-lucide="cpu" class="w-4 h-4"></i>Como Funciona</a>
       <a href="#inclusao" class="hover:text-orange-500 flex items-center gap-1"><i data-lucide="users" class="w-4 h-4"></i>Inclusão</a>
       <a href="#faq" class="hover:text-orange-500 flex items-center gap-1"><i data-lucide="help-circle" class="w-4 h-4"></i>FAQ</a>
-      
     </nav>
   </header>
 
@@ -177,7 +175,6 @@
     // ===== Estado & Util =====
     let dados = {};
     const STORAGE_KEY = 'NUBBIN_PROGRESS_V1';
-    let MODO_TREINO = (localStorage.getItem('NUBBIN_MODO_TREINO') === '1');
     const hud = document.getElementById('hud');
     const hudText = document.getElementById('hudText');
 
@@ -245,8 +242,7 @@
     function mostrarInput(){ document.getElementById('responder').classList.remove('hidden'); playBeep(); }
     async function validarResposta(){
       const resp = document.getElementById('resposta').value.trim();
-      if(resp === seq){ alert(`Sucesso, Recruta ${dados?.nome||''}. Avanças para o nível 2.`); await salvarProgresso(1,true); showNivel2();
-      } else {
+      if(resp === seq){ alert('Correto. Avanças para o nível 2.'); await salvarProgresso(1,true); showNivel2(); } else {
         falha(1);
       }
     }
@@ -303,49 +299,21 @@
       });
     }
 
-    
-    else {
-        badge.textContent = 'Treino: OFF';
-        badge.parentElement.classList.remove('border-green-600','text-green-400');
-      }
-    }
     // ===== Falha e Checkpoint =====
-    
     function falha(level){
-      if(MODO_TREINO){
-        let dica = '';
-        if(level===1){
-          dica = `Resposta correta: ${seq}`;
-          document.getElementById('responder').classList.remove('hidden');
-          document.getElementById('resposta').focus();
-        } else if(level===2){
-          dica = `Resposta correta: ${logica.resposta}`;
-          document.getElementById('respostaLogica').focus();
-        } else if(level===3){
-          alert('Treino: falha nos reflexos. Tenta novamente imediatamente.');
-          const arena = document.getElementById('arena'); arena.innerHTML='';
-          document.getElementById('reflexMsg').innerText = 'Aguarda pelo alvo...';
-          const delay = 500 + Math.random()*1000;
-          setTimeout(()=>spawnAlvo(arena), delay);
-          playBeep();
-          return;
-        } else {
-          const code = codemap[level]; if(code) dica = `Código certo: ${code}`;
-        }
-        alert(`Falha (Treino). Tenta novamente no mesmo nível.\n${dica}`);
-        playBeep();
-        return; // não reinicia fase
-      }
       alert(`Falha detectada, Recruta ${dados.nome}. Reinício para o início da fase.`);
       const start = phaseStart(level);
       localStorage.setItem(STORAGE_KEY, String(start));
+      // Volta ao início da fase: aqui redirecionamos para o primeiro nível da fase
       if(start === 1) { showOnly('nivel1'); document.getElementById('registro').classList.add('hidden'); goToLevel(1); }
+      else if(start === 11) { avancarGenerico(11); }
+      else if(start === 21) { avancarGenerico(21); }
       else { avancarGenerico(start); }
       playBeep();
     }
-        
 
     // ===== Auto-gerador de níveis 4..100 (placeholders funcionais) =====
+    // Cada nível gera um "código Nubbin" que o jogador deve digitar (aumenta o tamanho com o nível)
     function ensureNivelSection(n){
       if(document.getElementById('nivel'+n)) return;
       const sec = document.createElement('section');
@@ -357,12 +325,13 @@
         <input id="inp${n}" class="mt-4 rounded-xl border border-neutral-700 bg-neutral-900 px-4 py-3 text-sm" placeholder="Código" />
         <button class="ml-2 px-4 py-2 bg-green-500 text-black rounded-xl" onclick="validarCodigo(${n})">Enviar</button>
       `;
+      // insere antes da seção "Sobre" para manter ordem visual
       const sobre = document.getElementById('sobre');
       sobre.parentNode.insertBefore(sec, sobre);
     }
 
     function gerarCodigo(n){
-      const len = Math.min(3 + Math.floor(n/3), 10);
+      const len = Math.min(3 + Math.floor(n/3), 10); // cresce com o nível até 10
       const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
       let out = '';
       for(let i=0;i<len;i++) out += chars[Math.floor(Math.random()*chars.length)];
@@ -373,12 +342,15 @@
     function avancarGenerico(n){
       ensureNivelSection(n);
       for(let i=n;i<=Math.min(100,n+1);i++){ ensureNivelSection(i); }
+      // prepara código do nível n
       const code = gerarCodigo(n); codemap[n] = code;
       document.getElementById('code'+n).textContent = code;
+      // esconder níveis anteriores
       document.querySelectorAll('section').forEach(s=>{ if(s.id && s.id.startsWith('nivel')) s.classList.add('hidden'); });
       document.getElementById('nivel'+n).classList.remove('hidden');
       goToLevel(n); playBeep();
       if(n===100){
+        // Final: escolha simples
         const sec = document.getElementById('nivel100');
         const end = document.createElement('div'); end.className='mt-6 flex justify-center gap-3';
         end.innerHTML = `
@@ -408,9 +380,9 @@
     // ===== Beep em botões e cards =====
     document.addEventListener('DOMContentLoaded', () => {
       document.querySelectorAll('button, .card').forEach(el => { el.addEventListener('click', playBeep); });
+      // Retoma progresso se existir
       const p = loadProgress();
-      if(p>=1){
-        document.getElementById('registro').classList.add('hidden');
+      if(p>=1){ document.getElementById('registro').classList.add('hidden');
         if(p===1){ document.getElementById('nivel1').classList.remove('hidden'); updateHUD(1); }
         else if(p===2){ showNivel2(); }
         else if(p===3){ showNivel3(); }
@@ -419,42 +391,103 @@
     });
   </script>
 
-  
-
   <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
 
+<!-- Narradora IA refinada (voz humana) -->
 <script>
+(function(){
+  let preferred = null;
+  function pickVoice(){
+    const voices = (typeof speechSynthesis !== 'undefined') ? speechSynthesis.getVoices() : [];
+    preferred =
+      voices.find(v => v.name && v.name.includes('Google') && v.lang && v.lang.toLowerCase().startsWith('pt')) ||
+      voices.find(v => v.lang && v.lang.toLowerCase().startsWith('pt-pt')) ||
+      voices.find(v => v.lang && v.lang.toLowerCase().startsWith('pt')) ||
+      null;
+  }
+  if (typeof speechSynthesis !== 'undefined') {
+    speechSynthesis.onvoiceschanged = pickVoice;
+    try { pickVoice(); } catch(e){}
+  }
+  window.narrar = function narrar(texto, opts={}){
+    if (typeof speechSynthesis === 'undefined' || !texto) return;
+    const u = new SpeechSynthesisUtterance(String(texto));
+    u.lang   = opts.lang   || (preferred && preferred.lang) || 'pt-PT';
+    u.pitch  = (opts.pitch  !== undefined) ? opts.pitch  : 1;
+    u.rate   = (opts.rate   !== undefined) ? opts.rate   : 0.95;
+    u.volume = (opts.volume !== undefined) ? opts.volume : 1;
+    if (preferred) u.voice = preferred;
+    try { speechSynthesis.cancel(); } catch(e){}
+    try { speechSynthesis.speak(u); } catch(e){}
+  };
+  if (typeof speechSynthesis !== 'undefined') {
+    const _speak = speechSynthesis.speak.bind(speechSynthesis);
+    speechSynthesis.speak = function(utter){
+      try{
+        if (utter && utter instanceof SpeechSynthesisUtterance) {
+          if (preferred) utter.voice = preferred;
+          if (!utter.lang)   utter.lang   = (preferred && preferred.lang) || 'pt-PT';
+          if (utter.pitch   === undefined) utter.pitch  = 1;
+          if (utter.rate    === undefined) utter.rate   = 0.95;
+          if (utter.volume  === undefined) utter.volume = 1;
+        }
+      }catch(e){}
+      return _speak(utter);
+    };
+  }
+  (function hookAlerts(){
+    const original = window.alert ? window.alert.bind(window) : null;
+    if (!original) return;
+    window.alert = function(msg){
+      try { window.narrar(String(msg)); } catch(e){}
+      return original(msg);
+    };
+  })();
+})();
+</script>
+
+
+<script>
+// ===== Supabase config =====
 const SUPABASE_URL = "https://eekaqwyyzgoecrrlveqp.supabase.co";
 const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVla2Fxd3l5emdvZWNycmx2ZXFwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTY1ODU2MDcsImV4cCI6MjA3MjE2MTYwN30.r2DYIA0X_6wZQjIAuwimtIotIqiRbkM8oXuuJokieFc";
 const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
+// ===== APIs Supabase =====
 let currentUser = null;
+
 async function registrar(nome, idade, local) {
   const { data, error } = await supabase.from('users').insert([{ name:nome, age:parseInt(idade), location:local }]).select();
   if(error){ console.error(error); alert('Falha no registro.'); return null; }
   return data[0];
 }
+
 async function salvarProgresso(level, completed=true) {
   if(!currentUser) return;
   const { data, error } = await supabase.from('progress').upsert([{ user_id: currentUser.id, level, completed }]).select();
   if(error) console.error(error);
   return data;
 }
+
 async function salvarRanking(score) {
   if(!currentUser) return;
   const { data, error } = await supabase.from('ranking').insert([{ user_id: currentUser.id, score }]).select();
   if(error) console.error(error);
   return data;
 }
+
 async function carregarRanking() {
   const { data, error } = await supabase.from('ranking').select('score, created_at, users!inner(name)').order('score', { ascending:false }).limit(10);
   if(error){ console.error(error); return []; }
   return data;
 }
+
+// Bind registrar no submit do formulário (se existir)
 document.addEventListener('DOMContentLoaded', ()=>{
   const form = document.getElementById('form');
   if(form){
     form.addEventListener('submit', async (e)=>{
+      // não cancela o fluxo existente do teu JS; apenas regista paralelamente
       const nome = document.getElementById('nome')?.value?.trim()||'';
       const idade = document.getElementById('idade')?.value?.trim()||'';
       const local = document.getElementById('local')?.value?.trim()||'';
