@@ -22,11 +22,33 @@
     .hud { position: fixed; right: 16px; top: 88px; z-index: 40; }
     .flash { animation: flash 180ms ease-out; }
     @keyframes flash { from { box-shadow: 0 0 18px #f97316; } to { box-shadow: 0 0 0 transparent; } }
+  
+    /* Mobile optimizations */
+    * { -webkit-tap-highlight-color: rgba(0,0,0,0); }
+    button, .btn { min-height: 44px; min-width: 44px; }
+    @media (hover: none) {
+      .card:hover { transform: none; box-shadow: none; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      * { animation: none !important; transition: none !important; }
+    }
+
   </style>
 
   <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
   <link rel="manifest" href="manifest.json">
   <meta name="theme-color" content="#f97316">
+  <meta name="description" content="Nubbin™ — Protocolo militar cognitivo com narradora IA. 100 níveis, treino de memória, lógica e reflexos.">
+  <link rel="preconnect" href="https://eekaqwyyzgoecrrlveqp.supabase.co" crossorigin>
+  <link rel="dns-prefetch" href="//eekaqwyyzgoecrrlveqp.supabase.co">
+  <link rel="preconnect" href="https://unpkg.com" crossorigin>
+  <link rel="dns-prefetch" href="//unpkg.com">
+  <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+  <link rel="dns-prefetch" href="//cdn.jsdelivr.net">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="mobile-web-app-capable" content="yes">
+
 </head>
 <body class="bg-black text-neutral-100 font-mono">
   <!-- Header fixo -->
@@ -282,7 +304,7 @@
     }
     function spawnAlvo(arena){
       const alvo = document.createElement('button');
-      alvo.className = 'absolute w-10 h-10 rounded-full bg-orange-500 text-black text-xs';
+      alvo.className = 'absolute w-12 h-12 rounded-full bg-orange-500 text-black text-xs';
       alvo.textContent = 'ALVO';
       const maxX = arena.clientWidth - 40; const maxY = arena.clientHeight - 40;
       alvo.style.left = Math.floor(Math.random()*maxX)+'px';
@@ -495,6 +517,15 @@ document.addEventListener('DOMContentLoaded', ()=>{
     }, { once:true });
   }
 });
+</script>
+
+
+<script>
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', function() {
+    navigator.serviceWorker.register('sw.js').catch(console.error);
+  });
+}
 </script>
 
 </body>
