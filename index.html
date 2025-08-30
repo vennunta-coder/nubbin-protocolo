@@ -38,7 +38,7 @@
       <a href="#funciona" class="hover:text-orange-500 flex items-center gap-1"><i data-lucide="cpu" class="w-4 h-4"></i>Como Funciona</a>
       <a href="#inclusao" class="hover:text-orange-500 flex items-center gap-1"><i data-lucide="users" class="w-4 h-4"></i>Inclusão</a>
       <a href="#faq" class="hover:text-orange-500 flex items-center gap-1"><i data-lucide="help-circle" class="w-4 h-4"></i>FAQ</a>
-      <button id="toggleTreino" class="ml-4 px-3 py-2 rounded-xl border border-neutral-700 bg-neutral-900 text-xs flex items-center gap-2 hover:border-orange-500 hover:text-orange-500">
+      <button id="toggleTreino" class="ml-4 px-3 py-2 rounded-xl border border-neutral-700 bg-neutral-900 text-xs flex items-center gap-2 hover:border-orange-500 hover:text-orange-500" type="button" onclick="toggleTreino()">
         <i data-lucide="graduation-cap" class="w-4 h-4"></i>
         <span id="badgeTreino">Treino: OFF</span>
       </button>
@@ -431,6 +431,15 @@
         else if(p===2){ showNivel2(); }
         else if(p===3){ showNivel3(); }
         else { avancarGenerico(p); }
+      }
+    });
+  </script>
+
+  <script>
+    /* Treino fallback init */
+    document.addEventListener('readystatechange', function(){
+      if(document.readyState === 'complete'){
+        try { if (typeof updateTreinoBadge === 'function') updateTreinoBadge(); } catch(e){}
       }
     });
   </script>
