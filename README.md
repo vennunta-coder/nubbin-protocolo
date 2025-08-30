@@ -1,3 +1,0 @@
-# Nubbin Protocolo
-
-▶️ Play Demo
