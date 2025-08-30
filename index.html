@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Rede dos 5 Minutos</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+  
+    <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#f97316">
+</head>
+  <body class="bg-neutral-950 text-neutral-50">
+    <!-- Header -->
+    <header class="sticky top-0 bg-neutral-950/80 backdrop-blur border-b border-neutral-800">
+      <div class="max-w-6xl mx-auto px-4 py-4 flex justify-between items-center">
+        <div class="flex items-center gap-2">
+          <svg width="28" height="28" viewBox="0 0 128 128" xmlns="http://www.w3.org/2000/svg">
+            <rect x="8" y="8" width="112" height="112" rx="28" fill="#f59e0b" />
+            <path d="M64 64 V44" stroke="#0a0a0a" stroke-width="10" stroke-linecap="round" />
+            <path d="M64 64 L84 72" stroke="#0a0a0a" stroke-width="10" stroke-linecap="round" />
+            <circle cx="64" cy="64" r="6" fill="#0a0a0a" />
+          </svg>
+          <span class="font-bold text-lg">Rede dos 5 Minutos</span>
+        </div>
+        <a href="#form" class="bg-orange-500 text-neutral-950 font-semibold px-4 py-2 rounded-xl hover:bg-orange-400 transition">Quero Registrar </a>
+      </div>
+    </header>
+
+    <!-- Hero -->
+    <section class="max-w-6xl mx-auto px-4 py-20 text-center">
+      <h1 class="text-4xl md:text-6xl font-black mb-6">
+        Conecte-se em apenas <span class="text-orange-500">5 minutos por dia</span>
+      </h1>
+      <p class="max-w-2xl mx-auto text-neutral-300 text-lg mb-8">
+        Uma rede social minimalista: sem feeds infinitos, sem vício.
+        Apenas um instante real de conexão diária.
+      </p>
+      <form
+        id="form"
+        class="max-w-md mx-auto flex gap-2"
+      >
+        <input
+          type="email"
+          id="email"
+          required
+          placeholder="seuemail@exemplo.com"
+          class="flex-1 rounded-2xl border border-neutral-800 bg-neutral-900 px-4 py-3 text-sm text-neutral-100 placeholder:text-neutral-500 focus:outline-none focus:ring-2 focus:ring-orange-500"
+        />
+        <button
+          type="submit"
+          class="bg-orange-500 px-5 py-3 rounded-2xl font-semibold text-neutral-950 shadow-[0_4px_0_#7c2d12] hover:translate-y-0.5 active:translate-y-1 transition"
+        >
+          Quero ser avisado
+        </button>
+      </form>
+      <p id="feedbackMsg" class="text-sm mt-3 text-green-400 hidden">
+        Obrigado pelo cadastro! 🎉
+      </p>
+    </section>
+
+    <!-- Sobre -->
+    <section id="sobre" class="max-w-6xl mx-auto px-4 py-16 text-center">
+      <h2 class="text-3xl font-bold mb-4">Sobre a Rede</h2>
+      <p class="max-w-3xl mx-auto text-neutral-300">
+        A Rede dos 5 Minutos nasceu da necessidade de desacelerar.
+        Aqui, cada pessoa tem apenas cinco minutos por dia para se expressar
+        e interagir. É uma pausa consciente em meio ao excesso de informação.
+      </p>
+    </section>
+
+    <!-- Como funciona -->
+    <section id="como-funciona" class="bg-neutral-900 py-16">
+      <div class="max-w-6xl mx-auto px-4 grid md:grid-cols-3 gap-10 text-center">
+        <div class="p-6 rounded-2xl border border-neutral-800 bg-neutral-950">
+          <h3 class="text-xl font-semibold mb-2">1. Acesse</h3>
+          <p class="text-neutral-400">Uma vez por dia, entre na rede.</p>
+        </div>
+        <div class="p-6 rounded-2xl border border-neutral-800 bg-neutral-950">
+          <h3 class="text-xl font-semibold mb-2">2. Compartilhe</h3>
+          <p class="text-neutral-400">Poste seus pensamentos ou fotos em até 5 minutos.</p>
+        </div>
+        <div class="p-6 rounded-2xl border border-neutral-800 bg-neutral-950">
+          <h3 class="text-xl font-semibold mb-2">3. Conecte</h3>
+          <p class="text-neutral-400">Interaja de forma rápida, sem perder tempo.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Inclusão -->
+    <section id="genero" class="max-w-6xl mx-auto px-4 py-16 text-center">
+      <h2 class="text-3xl font-bold mb-4">Uma rede para todos</h2>
+      <p class="max-w-3xl mx-auto text-neutral-300">
+        A Rede dos 5 Minutos é inclusiva e diversa.  
+        Não importa seu gênero, identidade ou origem — todos são bem-vindos
+        a compartilhar seus 5 minutos de verdade.
+      </p>
+    </section>
+
+    <!-- FAQ -->
+    <section id="faq" class="bg-neutral-900 py-16">
+      <div class="max-w-3xl mx-auto px-4">
+        <h2 class="text-3xl font-bold mb-8 text-center">Perguntas Frequentes</h2>
+        <div class="space-y-6">
+          <div>
+            <h3 class="font-semibold">É pago?</h3>
+            <p class="text-neutral-400">Não, o acesso básico será gratuito.</p>
+          </div>
+          <div>
+            <h3 class="font-semibold">Posso postar mais de uma vez?</h3>
+            <p class="text-neutral-400">Você pode postar e interagir dentro dos 5 minutos diários.</p>
+          </div>
+          <div>
+            <h3 class="font-semibold">Posso recuperar posts antigos?</h3>
+            <p class="text-neutral-400">Sim, seu histórico fica salvo no seu perfil.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CTA final -->
+    <section class="bg-orange-500 text-neutral-950 py-16 text-center">
+      <h2 class="text-3xl font-black mb-4">Pronto para se conectar de forma saudável?</h2>
+      <a href="#form" class="bg-neutral-950 text-orange-500 px-6 py-3 rounded-2xl font-semibold hover:bg-neutral-800 transition">Quero Registrar </a>
+    </section>
+
+    <!-- Footer -->
+    <footer class="max-w-6xl mx-auto px-4 py-10 text-center text-neutral-500 text-sm">
+      <p>© 2025 Rede dos 5 Minutos. Todos os direitos reservados.</p>
+      <div class="flex justify-center gap-4 mt-4">
+        <a href="#" class="hover:text-orange-500">Twitter</a>
+        <a href="#" class="hover:text-orange-500">Instagram</a>
+        <a href="#" class="hover:text-orange-500">Contato</a>
+      </div>
+    </footer>
+
+    <!-- Script de feedback -->
+    <script>
+      const form = document.getElementById("form");
+      const emailInput = document.getElementById("email");
+      const feedback = document.getElementById("feedbackMsg");
+
+      form.addEventListener("submit", function (e) {
+        e.preventDefault(); // impede reload
+        const email = emailInput.value.trim();
+
+        if (!email) return;
+
+        // Simulação de envio
+        setTimeout(() => {
+          feedback.classList.remove("hidden");
+          emailInput.value = "";
+        }, 500);
+      });
+    </script>
+  </body>
+</html>
