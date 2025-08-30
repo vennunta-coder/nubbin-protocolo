@@ -1,447 +1,310 @@
 <!DOCTYPE html>
-<html lang="pt">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Nubbin™ Protocolo Militar Cognitivo</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script src="https://unpkg.com/lucide@latest"></script>
-  <style>
-    html { scroll-behavior: smooth; }
-    section { scroll-margin-top: 100px; }
-    nav a i { transition: all 0.3s ease; }
-    nav a:hover i { color: #f97316; transform: scale(1.2); filter: drop-shadow(0 0 6px #f97316); }
-    footer i { transition: all 0.3s ease; }
-    footer i:hover { transform: scale(1.3); filter: drop-shadow(0 0 8px #f97316); }
-    button { transition: all 0.3s ease; }
-    button:hover { transform: translateY(-2px) scale(1.05); box-shadow: 0 0 12px #f97316; }
-    button:active { transform: scale(0.95); box-shadow: 0 0 6px #f97316 inset; }
-    .card { transition: all 0.3s ease; cursor: pointer; }
-    .card:hover { transform: translateY(-4px) scale(1.03); box-shadow: 0 0 16px #f97316; }
-    /* HUD */
-    .hud { position: fixed; right: 16px; top: 88px; z-index: 40; }
-    .flash { animation: flash 180ms ease-out; }
-    @keyframes flash { from { box-shadow: 0 0 18px #f97316; } to { box-shadow: 0 0 0 transparent; } }
-  </style>
-
-    <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
-    <link rel="manifest" href="manifest.json">
-    <meta name="theme-color" content="#f97316">
-    
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Rede dos 5 Minutos</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+  
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#f97316">
 </head>
-<body class="bg-black text-neutral-100 font-mono">
-  <!-- Header fixo -->
-  <header class="fixed top-0 left-0 w-full bg-black/90 backdrop-blur-sm z-50 p-6 flex justify-between items-center border-b border-neutral-800">
-    <h1 class="text-2xl font-bold text-orange-500">Nubbin™ Protocolo</h1>
-    <nav class="space-x-6 flex items-center">
-      <a href="#sobre" class="hover:text-orange-500 flex items-center gap-1"><i data-lucide="info" class="w-4 h-4"></i>Sobre</a>
-      <a href="#funciona" class="hover:text-orange-500 flex items-center gap-1"><i data-lucide="cpu" class="w-4 h-4"></i>Como Funciona</a>
-      <a href="#inclusao" class="hover:text-orange-500 flex items-center gap-1"><i data-lucide="users" class="w-4 h-4"></i>Inclusão</a>
-      <a href="#faq" class="hover:text-orange-500 flex items-center gap-1"><i data-lucide="help-circle" class="w-4 h-4"></i>FAQ</a>
-      <button id="toggleTreino" class="ml-4 px-3 py-2 rounded-xl border border-neutral-700 bg-neutral-900 text-xs flex items-center gap-2 hover:border-orange-500 hover:text-orange-500" type="button" onclick="toggleTreino()">
-        <i data-lucide="graduation-cap" class="w-4 h-4"></i>
-        <span id="badgeTreino">Treino: OFF</span>
-      </button>
-    </nav>
-  </header>
-
-  <!-- HUD de progresso -->
-  <div id="hud" class="hud hidden">
-    <div class="bg-neutral-900/70 border border-neutral-800 rounded-xl px-4 py-3 flex items-center gap-3">
-      <i data-lucide="activity" class="w-4 h-4 text-orange-500"></i>
-      <div>
-        <p class="text-xs text-neutral-400">Progresso</p>
-        <p id="hudText" class="text-sm font-semibold"></p>
+  <body class="bg-neutral-950 text-neutral-50">
+    <!-- Header -->
+    <header class="sticky top-0 bg-neutral-950/80 backdrop-blur border-b border-neutral-800">
+      <div class="max-w-6xl mx-auto px-4 py-4 flex justify-between items-center">
+        <div class="flex items-center gap-2">
+          <svg width="28" height="28" viewBox="0 0 128 128" xmlns="http://www.w3.org/2000/svg">
+            <rect x="8" y="8" width="112" height="112" rx="28" fill="#f59e0b" />
+            <path d="M64 64 V44" stroke="#0a0a0a" stroke-width="10" stroke-linecap="round" />
+            <path d="M64 64 L84 72" stroke="#0a0a0a" stroke-width="10" stroke-linecap="round" />
+            <circle cx="64" cy="64" r="6" fill="#0a0a0a" />
+          </svg>
+          <span class="font-bold text-lg">Rede dos 5 Minutos</span>
+        </div>
+        <a href="#form" class="bg-orange-500 text-neutral-950 font-semibold px-4 py-2 rounded-xl hover:bg-orange-400 transition">Quero Registrar </a>
       </div>
-    </div>
-  </div>
+    </header>
 
-  <!-- Hero -->
-  <section class="text-center py-32 border-b border-neutral-800">
-    <h2 class="text-4xl font-bold text-orange-500">PROTOCOLO DE TREINO MENTAL</h2>
-    <p class="mt-4 text-neutral-400">Recruta, apenas mentes fortes sobrevivem ao Nubbin™. Identifica-te.</p>
-  </section>
-
-  <!-- Registro -->
-  <section class="py-24" id="registro">
-    <div class="max-w-md mx-auto">
-      <form id="form" class="flex flex-col gap-4">
-        <input id="nome" type="text" placeholder="Nome" required class="rounded-xl border border-neutral-700 bg-neutral-900 px-4 py-3 text-sm" />
-        <input id="idade" type="number" placeholder="Idade" required class="rounded-xl border border-neutral-700 bg-neutral-900 px-4 py-3 text-sm" />
-        <input id="local" type="text" placeholder="Localização" required class="rounded-xl border border-neutral-700 bg-neutral-900 px-4 py-3 text-sm" />
-        <button type="submit" class="bg-orange-500 px-5 py-3 rounded-xl font-semibold text-black">Iniciar Protocolo</button>
+    <!-- Hero -->
+    <section class="max-w-6xl mx-auto px-4 py-20 text-center">
+      <h1 class="text-4xl md:text-6xl font-black mb-6">
+        Conecte-se em apenas <span class="text-orange-500">5 minutos por dia</span>
+      </h1>
+      <p class="max-w-2xl mx-auto text-neutral-300 text-lg mb-8">
+        Uma rede social minimalista: sem feeds infinitos, sem vício.
+        Apenas um instante real de conexão diária.
+      </p>
+      <form
+        id="form"
+        class="max-w-md mx-auto flex gap-2"
+      >
+        <input
+          type="email"
+          id="email"
+          required
+          placeholder="seuemail@exemplo.com"
+          class="flex-1 rounded-2xl border border-neutral-800 bg-neutral-900 px-4 py-3 text-sm text-neutral-100 placeholder:text-neutral-500 focus:outline-none focus:ring-2 focus:ring-orange-500"
+        />
+        <button
+          type="submit"
+          class="bg-orange-500 px-5 py-3 rounded-2xl font-semibold text-neutral-950 shadow-[0_4px_0_#7c2d12] hover:translate-y-0.5 active:translate-y-1 transition"
+        >
+          Quero ser avisado
+        </button>
       </form>
-      <p id="feedbackMsg" class="text-sm mt-4 text-green-400 hidden"></p>
-    </div>
-  </section>
+      <p id="feedbackMsg" class="text-sm mt-3 text-green-400 hidden">
+        Obrigado pelo cadastro! 🎉
+      </p>
+    </section>
 
-  <!-- Nível 1: Memória -->
-  <section class="py-24 hidden text-center" id="nivel1">
-    <h3 class="text-xl font-bold text-orange-500">Nível 1 – Teste Cognitivo</h3>
-    <p class="mt-4">Memoriza a sequência:</p>
-    <p id="sequencia" class="text-3xl mt-2"></p>
-    <button onclick="mostrarInput()" class="mt-4 px-4 py-2 bg-orange-500 text-black rounded-xl">Estou pronto</button>
-    <div id="responder" class="hidden mt-6">
-      <input id="resposta" placeholder="Repete a sequência" class="rounded-xl border border-neutral-700 bg-neutral-900 px-4 py-3 text-sm" />
-      <button onclick="validarResposta()" class="ml-2 px-4 py-2 bg-green-500 text-black rounded-xl">Enviar</button>
-    </div>
-  </section>
+    <!-- Sobre -->
+    <section id="sobre" class="max-w-6xl mx-auto px-4 py-16 text-center">
+      <h2 class="text-3xl font-bold mb-4">Sobre a Rede</h2>
+      <p class="max-w-3xl mx-auto text-neutral-300">
+        A Rede dos 5 Minutos nasceu da necessidade de desacelerar.
+        Aqui, cada pessoa tem apenas cinco minutos por dia para se expressar
+        e interagir. É uma pausa consciente em meio ao excesso de informação.
+      </p>
+    </section>
 
-  <!-- Nível 2: Lógica -->
-  <section class="py-24 hidden text-center" id="nivel2">
-    <h3 class="text-xl font-bold text-orange-500">Nível 2 – Lógica</h3>
-    <p class="mt-4">Completa a sequência correta:</p>
-    <p id="seqLogica" class="text-2xl mt-2"></p>
-    <input id="respostaLogica" placeholder="Resposta" class="mt-4 rounded-xl border border-neutral-700 bg-neutral-900 px-4 py-3 text-sm" />
-    <button onclick="validarNivel2()" class="ml-2 px-4 py-2 bg-green-500 text-black rounded-xl">Enviar</button>
-  </section>
-
-  <!-- Nível 3: Reflexos -->
-  <section class="py-24 hidden text-center relative min-h-[320px]" id="nivel3">
-    <h3 class="text-xl font-bold text-orange-500">Nível 3 – Reflexos</h3>
-    <p class="mt-2 text-neutral-400">Clica no alvo assim que aparecer.</p>
-    <div id="arena" class="relative mx-auto mt-6 border border-neutral-800 rounded-xl w-[320px] h-[220px]"></div>
-    <p id="reflexMsg" class="mt-3 text-sm text-neutral-400"></p>
-  </section>
-
-  <!-- Sobre -->
-  <section class="py-24 border-t border-neutral-800" id="sobre">
-    <div class="max-w-3xl mx-auto text-center">
-      <h3 class="text-2xl font-bold text-orange-500">Sobre o Nubbin™</h3>
-      <p class="mt-4 text-neutral-400">O Nubbin™ é uma missão secreta de treino mental militar. Apenas os recrutas mais disciplinados e resilientes podem completar o protocolo de 100 níveis. O objetivo: transformar a mente humana em algo além do humano.</p>
-    </div>
-  </section>
-
-  <!-- Como Funciona -->
-  <section class="py-24 border-t border-neutral-800" id="funciona">
-    <div class="max-w-4xl mx-auto text-center">
-      <h3 class="text-2xl font-bold text-orange-500">Como Funciona</h3>
-      <div class="grid md:grid-cols-3 gap-6 mt-8">
-        <div class="card p-6 border border-neutral-800 rounded-xl" onclick="document.getElementById('registro').scrollIntoView({behavior: 'smooth'})">
-          <h4 class="font-semibold">1. Registrar</h4>
-          <p class="text-neutral-400 mt-2">Insere teu nome, idade e localização. A IA começa a observar-te.</p>
+    <!-- Como funciona -->
+    <section id="como-funciona" class="bg-neutral-900 py-16">
+      <div class="max-w-6xl mx-auto px-4 grid md:grid-cols-3 gap-10 text-center">
+        <div class="p-6 rounded-2xl border border-neutral-800 bg-neutral-950">
+          <h3 class="text-xl font-semibold mb-2">1. Acesse</h3>
+          <p class="text-neutral-400">Uma vez por dia, entre na rede.</p>
         </div>
-        <div class="card p-6 border border-neutral-800 rounded-xl" onclick="document.querySelector('#form button[type=submit]').click()">
-          <h4 class="font-semibold">2. Submeter</h4>
-          <p class="text-neutral-400 mt-2">Aceita o protocolo. A submissão é irreversível. A IA grava cada movimento.</p>
+        <div class="p-6 rounded-2xl border border-neutral-800 bg-neutral-950">
+          <h3 class="text-xl font-semibold mb-2">2. Compartilhe</h3>
+          <p class="text-neutral-400">Poste seus pensamentos ou fotos em até 5 minutos.</p>
         </div>
-        <div class="card p-6 border border-neutral-800 rounded-xl" onclick="startNivel1()">
-          <h4 class="font-semibold">3. Testar</h4>
-          <p class="text-neutral-400 mt-2">Cumpre os testes cognitivos, emocionais e físicos. Erra, e reinicia.</p>
+        <div class="p-6 rounded-2xl border border-neutral-800 bg-neutral-950">
+          <h3 class="text-xl font-semibold mb-2">3. Conecte</h3>
+          <p class="text-neutral-400">Interaja de forma rápida, sem perder tempo.</p>
         </div>
       </div>
-    </div>
-  </section>
+    </section>
 
-  <!-- Inclusão -->
-  <section class="py-24 border-t border-neutral-800" id="inclusao">
-    <div class="max-w-3xl mx-auto text-center">
-      <h3 class="text-2xl font-bold text-orange-500">Inclusão</h3>
-      <p class="mt-4 text-neutral-400">Todos são testados, independentemente da idade, origem ou condição. O Nubbin™ não discrimina: avalia, julga e seleciona.</p>
-    </div>
-  </section>
+    <!-- Inclusão -->
+    <section id="genero" class="max-w-6xl mx-auto px-4 py-16 text-center">
+      <h2 class="text-3xl font-bold mb-4">Uma rede para todos</h2>
+      <p class="max-w-3xl mx-auto text-neutral-300">
+        A Rede dos 5 Minutos é inclusiva e diversa.  
+        Não importa seu gênero, identidade ou origem — todos são bem-vindos
+        a compartilhar seus 5 minutos de verdade.
+      </p>
+    </section>
 
-  <!-- FAQ -->
-  <section class="py-24 border-t border-neutral-800" id="faq">
-    <div class="max-w-3xl mx-auto">
-      <h3 class="text-2xl font-bold text-orange-500 text-center">FAQ</h3>
-      <div class="mt-6 space-y-6">
-        <div>
-          <h4 class="font-semibold">É seguro?</h4>
-          <p class="text-neutral-400">Segurança é relativa. O Nubbin™ é intrusivo, invasivo e irreversível. Apenas os fortes sobrevivem.</p>
-        </div>
-        <div>
-          <h4 class="font-semibold">Posso desligar a IA?</h4>
-          <p class="text-neutral-400">Não. A IA controla o protocolo. A única saída é a conclusão ou a eliminação.</p>
-        </div>
-        <div>
-          <h4 class="font-semibold">E se eu falhar?</h4>
-          <p class="text-neutral-400">Falha significa reinício. O Nubbin™ não perdoa erros. A tua mente será forçada a repetir até obedecer.</p>
+    <!-- FAQ -->
+    <section id="faq" class="bg-neutral-900 py-16">
+      <div class="max-w-3xl mx-auto px-4">
+        <h2 class="text-3xl font-bold mb-8 text-center">Perguntas Frequentes</h2>
+        <div class="space-y-6">
+          <div>
+            <h3 class="font-semibold">É pago?</h3>
+            <p class="text-neutral-400">Não, o acesso básico será gratuito.</p>
+          </div>
+          <div>
+            <h3 class="font-semibold">Posso postar mais de uma vez?</h3>
+            <p class="text-neutral-400">Você pode postar e interagir dentro dos 5 minutos diários.</p>
+          </div>
+          <div>
+            <h3 class="font-semibold">Posso recuperar posts antigos?</h3>
+            <p class="text-neutral-400">Sim, seu histórico fica salvo no seu perfil.</p>
+          </div>
         </div>
       </div>
-    </div>
-  </section>
+    </section>
 
-  <!-- Footer -->
-  <footer class="py-8 border-t border-neutral-800 text-center text-neutral-400 text-sm bg-gradient-to-r from-neutral-900 via-black to-neutral-900">
-    <div class="flex justify-center gap-8 mb-4">
-      <i data-lucide="shield" class="w-5 h-5 text-orange-500"></i>
-      <i data-lucide="radar" class="w-5 h-5 text-orange-500"></i>
-      <i data-lucide="skull" class="w-5 h-5 text-orange-500"></i>
-    </div>
-    <p class="tracking-widest uppercase text-xs">© 2025 <span class="text-orange-500 font-bold">Nubbin™</span> Protocolo Militar Cognitivo</p>
-    <p class="mt-1 text-neutral-600 text-xs">Todos os direitos reservados.</p>
-  </footer>
+    <!-- CTA final -->
+    <section class="bg-orange-500 text-neutral-950 py-16 text-center">
+      <h2 class="text-3xl font-black mb-4">Pronto para se conectar de forma saudável?</h2>
+      <a href="#form" class="bg-neutral-950 text-orange-500 px-6 py-3 rounded-2xl font-semibold hover:bg-neutral-800 transition">Quero Registrar </a>
+    </section>
 
-  <!-- Scripts -->
-  <script>
-    lucide.createIcons();
+    <!-- Footer -->
+    <footer class="max-w-6xl mx-auto px-4 py-10 text-center text-neutral-500 text-sm">
+      <p>© 2025 Rede dos 5 Minutos. Todos os direitos reservados.</p>
+      <div class="flex justify-center gap-4 mt-4">
+        <a href="#" class="hover:text-orange-500">Twitter</a>
+        <a href="#" class="hover:text-orange-500">Instagram</a>
+        <a href="#" class="hover:text-orange-500">Contato</a>
+      </div>
+    </footer>
 
-    // ===== Estado & Util =====
-    let dados = {};
-    const STORAGE_KEY = 'NUBBIN_PROGRESS_V1';
-    let MODO_TREINO = (localStorage.getItem('NUBBIN_MODO_TREINO') === '1');
-    const hud = document.getElementById('hud');
-    const hudText = document.getElementById('hudText');
+    <!-- Script de feedback -->
+    <script>
+      const form = document.getElementById("form");
+      const emailInput = document.getElementById("email");
+      const feedback = document.getElementById("feedbackMsg");
 
-    function playBeep() {
-      const ctx = new (window.AudioContext || window.webkitAudioContext)();
-      const osc = ctx.createOscillator();
-      const gain = ctx.createGain();
-      osc.type = 'square'; osc.frequency.value = 600; gain.gain.value = 0.08;
-      osc.connect(gain); gain.connect(ctx.destination); osc.start(); osc.stop(ctx.currentTime + 0.15);
-    }
+      form.addEventListener("submit", function (e) {
+        e.preventDefault(); // impede reload
+        const email = emailInput.value.trim();
 
-    function flash(el){ el.classList.add('flash'); setTimeout(()=>el.classList.remove('flash'), 200); }
+        if (!email) return;
 
-    function phaseOf(level){ return Math.ceil(level/10); }
-    function phaseStart(level){ return (phaseOf(level)-1)*10 + 1; }
-
-    function saveProgress(level){ localStorage.setItem(STORAGE_KEY, String(level)); updateHUD(level); }
-    function loadProgress(){ const v = parseInt(localStorage.getItem(STORAGE_KEY)||'0'); return isNaN(v)?0:v; }
-
-    function updateHUD(level){
-      hud.classList.remove('hidden');
-      hudText.textContent = `Fase ${phaseOf(level)} / Nível ${level}`;
-      flash(hud.querySelector('div'));
-    }
-
-    function showOnly(sectionId){
-      document.querySelectorAll('section').forEach(s=>{ if(s.id && s.id.startsWith('nivel')) s.classList.add('hidden'); });
-      document.getElementById(sectionId)?.classList.remove('hidden');
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    }
-
-    function goToLevel(level){
-      saveProgress(level);
-      showOnly('nivel'+level);
-    }
-
-    // ===== Registro =====
-    const form = document.getElementById('form');
-    const feedback = document.getElementById('feedbackMsg');
-
-    form.addEventListener('submit', function(e) {
-      e.preventDefault();
-      dados.nome = document.getElementById('nome').value.trim();
-      dados.idade = document.getElementById('idade').value.trim();
-      dados.local = document.getElementById('local').value.trim();
-
-      feedback.classList.remove('hidden');
-      feedback.innerText = `Registro concluído. Recruta ${dados.nome}, ${dados.idade} anos, origem ${dados.local}. Confirmação aceite. Iniciando protocolo...`;
-      const utter = new SpeechSynthesisUtterance(feedback.innerText); utter.lang = 'pt-PT'; speechSynthesis.speak(utter);
-      playBeep(); flash(form.querySelector('button'));
-
-      setTimeout(()=>startNivel1(), 1200);
-    });
-
-    // ===== Nível 1: Memória =====
-    let seq = '';
-    function startNivel1(){
-      document.getElementById('registro').classList.add('hidden');
-      document.getElementById('nivel1').classList.remove('hidden');
-      seq = String(Math.floor(Math.random()*900+100));
-      document.getElementById('sequencia').innerText = seq;
-      setTimeout(()=>{ document.getElementById('sequencia').innerText = '???'; }, 2000);
-      goToLevel(1);
-    }
-    function mostrarInput(){ document.getElementById('responder').classList.remove('hidden'); playBeep(); }
-    function validarResposta(){
-      const resp = document.getElementById('resposta').value.trim();
-      if(resp === seq){
-        alert(`Sucesso, Recruta ${dados.nome}. Avanças para o nível 2.`);
-        showNivel2();
-      } else {
-        falha(1);
-      }
-    }
-
-    // ===== Nível 2: Lógica =====
-    let logica = { texto:'', resposta:'' };
-    function genSeq(){
-      const base = 2 + Math.floor(Math.random()*3); // 2..4
-      const start = 2; const a = [start];
-      for(let i=0;i<3;i++) a.push(a[a.length-1]*base);
-      logica.texto = a.slice(0,4).join(', ') + ', ?';
-      logica.resposta = String(a[4]);
-    }
-    function showNivel2(){
-      genSeq();
-      document.getElementById('seqLogica').innerText = logica.texto;
-      document.getElementById('nivel1').classList.add('hidden');
-      document.getElementById('nivel2').classList.remove('hidden');
-      goToLevel(2); playBeep();
-    }
-    function validarNivel2(){
-      const val = document.getElementById('respostaLogica').value.trim();
-      if(val === logica.resposta){ alert('Correto. Avanças para o nível 3.'); showNivel3(); }
-      else { falha(2); }
-    }
-
-    // ===== Nível 3: Reflexos =====
-    let reflexTimer = null; let clickWindow = 1400; // ms
-    function showNivel3(){
-      document.getElementById('nivel2').classList.add('hidden');
-      const n3 = document.getElementById('nivel3');
-      n3.classList.remove('hidden'); goToLevel(3);
-      const arena = document.getElementById('arena'); arena.innerHTML = '';
-      document.getElementById('reflexMsg').innerText = 'Aguarda pelo alvo...';
-      const delay = 700 + Math.random()*1500;
-      setTimeout(()=>spawnAlvo(arena), delay);
-    }
-    function spawnAlvo(arena){
-      const alvo = document.createElement('button');
-      alvo.className = 'absolute w-10 h-10 rounded-full bg-orange-500 text-black text-xs';
-      alvo.textContent = 'ALVO';
-      const maxX = arena.clientWidth - 40; const maxY = arena.clientHeight - 40;
-      alvo.style.left = Math.floor(Math.random()*maxX)+'px';
-      alvo.style.top  = Math.floor(Math.random()*maxY)+'px';
-      arena.appendChild(alvo); playBeep(); flash(arena);
-      reflexTimer = setTimeout(()=>{ if(arena.contains(alvo)) { falha(3); } }, clickWindow);
-      alvo.addEventListener('click', ()=>{
-        clearTimeout(reflexTimer); arena.innerHTML='';
-        document.getElementById('reflexMsg').innerText = 'Alvo atingido. Próximo nível em breve.';
-        alert('Excelente. Nível 3 concluído.');
-        avancarGenerico(4);
+        // Simulação de envio
+        setTimeout(() => {
+          feedback.classList.remove("hidden");
+          emailInput.value = "";
+        }, 500);
       });
-    }
+    </script>
+  
+  <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
 
-    
-    function updateTreinoBadge(){
-      const badge = document.getElementById('badgeTreino');
-      if(!badge) return;
-      if(MODO_TREINO){
-        badge.textContent = 'Treino: ON';
-        badge.parentElement.classList.add('border-green-600','text-green-400');
-      } else {
-        badge.textContent = 'Treino: OFF';
-        badge.parentElement.classList.remove('border-green-600','text-green-400');
-      }
-    }
-    function toggleTreino(){
-      MODO_TREINO = !MODO_TREINO;
-      localStorage.setItem('NUBBIN_MODO_TREINO', MODO_TREINO ? '1' : '0');
-      updateTreinoBadge();
-      alert(MODO_TREINO ? 'Modo Treino ativado: falhas não reiniciam a fase e mostram dica.' : 'Modo Treino desativado: protocolo rigoroso.');
-    }
-    
-    // ===== Falha e Checkpoint =====
-    
-    function falha(level){
-      if(MODO_TREINO){
-        let dica = '';
-        if(level===1){
-          dica = `Resposta correta: ${seq}`;
-          document.getElementById('responder').classList.remove('hidden');
-          document.getElementById('resposta').focus();
-        } else if(level===2){
-          dica = `Resposta correta: ${logica.resposta}`;
-          document.getElementById('respostaLogica').focus();
-        } else if(level===3){
-          alert('Treino: falha nos reflexos. Tenta novamente imediatamente.');
-          const arena = document.getElementById('arena'); arena.innerHTML='';
-          document.getElementById('reflexMsg').innerText = 'Aguarda pelo alvo...';
-          const delay = 500 + Math.random()*1000;
-          setTimeout(()=>spawnAlvo(arena), delay);
-          playBeep();
-          return;
-        } else {
-          const code = codemap[level]; if(code) dica = `Código certo: ${code}`;
-        }
-        alert(`Falha (Treino). Tenta novamente no mesmo nível.\n${dica}`);
-        playBeep();
-        return; // não reinicia fase
-      }
-      alert(`Falha detectada, Recruta ${dados.nome}. Reinício para o início da fase.`);
-      const start = phaseStart(level);
-      localStorage.setItem(STORAGE_KEY, String(start));
-      if(start === 1) { showOnly('nivel1'); document.getElementById('registro').classList.add('hidden'); goToLevel(1); }
-      else { avancarGenerico(start); }
-      playBeep();
-    }
-        
+<script>
+// ===== Supabase config =====
+const SUPABASE_URL = "https://eekaqwyyzgoecrrlveqp.supabase.co";
+const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVla2Fxd3l5emdvZWNycmx2ZXFwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTY1ODU2MDcsImV4cCI6MjA3MjE2MTYwN30.r2DYIA0X_6wZQjIAuwimtIotIqiRbkM8oXuuJokieFc";
+const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-    // ===== Auto-gerador de níveis 4..100 (placeholders funcionais) =====
-    function ensureNivelSection(n){
-      if(document.getElementById('nivel'+n)) return;
-      const sec = document.createElement('section');
-      sec.id = 'nivel'+n; sec.className = 'py-24 hidden text-center';
-      sec.innerHTML = `
-        <h3 class="text-xl font-bold text-orange-500">Nível ${n} – Protocolo</h3>
-        <p class="mt-3 text-neutral-300">Insere o código de autorização Nubbin™:</p>
-        <p id="code${n}" class="text-2xl mt-2"></p>
-        <input id="inp${n}" class="mt-4 rounded-xl border border-neutral-700 bg-neutral-900 px-4 py-3 text-sm" placeholder="Código" />
-        <button class="ml-2 px-4 py-2 bg-green-500 text-black rounded-xl" onclick="validarCodigo(${n})">Enviar</button>
-      `;
-      const sobre = document.getElementById('sobre');
-      sobre.parentNode.insertBefore(sec, sobre);
-    }
+// ===== Estado/HUD util =====
+const STORAGE_KEY = 'NUBBIN_PROGRESS_V1';
+function phaseOf(level){ return Math.ceil(level/10); }
+function phaseStart(level){ return (phaseOf(level)-1)*10 + 1; }
+function saveProgress(level){ localStorage.setItem(STORAGE_KEY, String(level)); }
+function goToLevel(level){
+  saveProgress(level);
+  const s = document.getElementById('nivel'+level);
+  if(s){ document.querySelectorAll('section').forEach(el=>{ if(el.id && el.id.startsWith('nivel')) el.classList.add('hidden'); }); s.classList.remove('hidden'); }
+  window.scrollTo({top:0,behavior:'smooth'});
+}
 
-    function gerarCodigo(n){
-      const len = Math.min(3 + Math.floor(n/3), 10);
-      const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
-      let out = '';
-      for(let i=0;i<len;i++) out += chars[Math.floor(Math.random()*chars.length)];
-      return out;
-    }
+// ===== APIs Supabase =====
+let currentUser = null;
 
-    const codemap = {};
-    function avancarGenerico(n){
-      ensureNivelSection(n);
-      for(let i=n;i<=Math.min(100,n+1);i++){ ensureNivelSection(i); }
-      const code = gerarCodigo(n); codemap[n] = code;
-      document.getElementById('code'+n).textContent = code;
-      document.querySelectorAll('section').forEach(s=>{ if(s.id && s.id.startsWith('nivel')) s.classList.add('hidden'); });
-      document.getElementById('nivel'+n).classList.remove('hidden');
-      goToLevel(n); playBeep();
-      if(n===100){
-        const sec = document.getElementById('nivel100');
-        const end = document.createElement('div'); end.className='mt-6 flex justify-center gap-3';
-        end.innerHTML = `
-          <button class="px-4 py-2 bg-red-500 text-black rounded-xl" onclick="finalRebelde()">Desligar IA</button>
-          <button class="px-4 py-2 bg-orange-500 text-black rounded-xl" onclick="finalFusao()">Fundir com IA</button>
-        `; sec.appendChild(end);
-      }
-    }
+async function registrar(nome, idade, local) {
+  const { data, error } = await supabase.from('users').insert([{ name:nome, age:parseInt(idade), location:local }]).select();
+  if(error){ console.error(error); alert('Falha no registro.'); return null; }
+  return data[0];
+}
 
-    window.validarCodigo = function(n){
-      const val = document.getElementById('inp'+n).value.trim().toUpperCase();
-      if(val === codemap[n]){
-        if(n < 100){ alert(`Nível ${n} concluído. Avanças para o ${n+1}.`); avancarGenerico(n+1); }
-        else { alert('Chegaste ao Núcleo Nubbin™. Faz a tua escolha.'); }
-      } else { falha(n); }
-    }
+async function salvarProgresso(level, completed=true) {
+  if(!currentUser) return;
+  const { data, error } = await supabase.from('progress').upsert([{ user_id: currentUser.id, level, completed }]).select();
+  if(error) console.error(error);
+  return data;
+}
 
-    window.finalRebelde = function(){
-      alert('Liberdade conquistada. Memórias apagadas. Reinício do protocolo.');
-      localStorage.removeItem(STORAGE_KEY); location.reload();
-    }
-    window.finalFusao = function(){
-      alert('Fusão completa. És Nubbin™ eterno.');
-      localStorage.setItem(STORAGE_KEY,'100');
-    }
+async function salvarRanking(score) {
+  if(!currentUser) return;
+  const { data, error } = await supabase.from('ranking').insert([{ user_id: currentUser.id, score }]).select();
+  if(error) console.error(error);
+  return data;
+}
 
-    // ===== Beep em botões e cards =====
-    document.addEventListener('DOMContentLoaded', () => {
-      document.querySelectorAll('button, .card').forEach(el => { el.addEventListener('click', playBeep); });
-      const p = loadProgress();
-      if(p>=1){
-        document.getElementById('registro').classList.add('hidden');
-        if(p===1){ document.getElementById('nivel1').classList.remove('hidden'); updateHUD(1); }
-        else if(p===2){ showNivel2(); }
-        else if(p===3){ showNivel3(); }
-        else { avancarGenerico(p); }
-      }
+async function carregarRanking() {
+  const { data, error } = await supabase.from('ranking').select('score, created_at, users!inner(name)').order('score', { ascending:false }).limit(10);
+  if(error){ console.error(error); return []; }
+  return data;
+}
+
+// ===== Registro form binding (se existir) =====
+document.addEventListener('DOMContentLoaded', ()=>{
+  const form = document.getElementById('form');
+  if(form){
+    form.addEventListener('submit', async (e)=>{
+      e.preventDefault();
+      const nome = document.getElementById('nome')?.value?.trim()||'';
+      const idade = document.getElementById('idade')?.value?.trim()||'';
+      const local = document.getElementById('local')?.value?.trim()||'';
+      const user = await registrar(nome, idade, local);
+      if(!user) return;
+      currentUser = user;
+      const fb = document.getElementById('feedbackMsg');
+      if(fb){ fb.classList.remove('hidden'); fb.innerText = `Registro concluído. Recruta ${nome}, ${idade} anos, origem ${local}. Iniciando protocolo...`; }
+      setTimeout(()=>{ if(typeof startNivel1==='function') startNivel1(); else goToLevel(1); }, 600);
     });
-  </script>
+  }
+});
 
-  <script>
-    /* Treino fallback init */
-    document.addEventListener('readystatechange', function(){
-      if(document.readyState === 'complete'){
-        try { if (typeof updateTreinoBadge === 'function') updateTreinoBadge(); } catch(e){}
-      }
-    });
-  </script>
+// ===== Falha rigorosa (override) =====
+function falha(level){
+  alert('Falha detectada, Recruta. Reinício para o início da fase.');
+  const start = phaseStart(level);
+  localStorage.setItem(STORAGE_KEY, String(start));
+  if(start === 1) { const reg = document.getElementById('registro'); if(reg) reg.classList.add('hidden'); goToLevel(1); }
+  else { goToLevel(start); }
+}
+
+// ===== Ranking render (se existir) =====
+document.addEventListener('DOMContentLoaded', async ()=>{
+  const el = document.getElementById('rankingList');
+  if(!el) return;
+  el.textContent = 'Carregando...';
+  const top = await carregarRanking();
+  if(!top.length) { el.textContent = 'Sem registos.'; return; }
+  el.innerHTML = top.map((r,i)=>`<div class='flex justify-between'><span>${i+1}. ${r.users.name||'Anónimo'}</span><span>${r.score}</span></div>`).join('');
+});
+
+// ===== Nível 1 helpers (se existirem) =====
+let seq='';
+function startNivel1(){
+  const reg = document.getElementById('registro'); if(reg) reg.classList.add('hidden');
+  const s1 = document.getElementById('nivel1'); if(s1) s1.classList.remove('hidden');
+  seq = String(Math.floor(Math.random()*900+100));
+  const el = document.getElementById('sequencia'); if(el) el.innerText = seq;
+  setTimeout(()=>{ const el2 = document.getElementById('sequencia'); if(el2) el2.innerText = '???'; }, 2000);
+  goToLevel(1);
+}
+function mostrarInput(){ const r = document.getElementById('responder'); if(r) r.classList.remove('hidden'); }
+async function validarResposta(){
+  const v = document.getElementById('resposta')?.value?.trim()||'';
+  if(v === seq){ alert('Correto. Avanças para o nível 2.'); await salvarProgresso(1,true); if(typeof showNivel2==='function') showNivel2(); }
+  else { falha(1); }
+}
+
+// ===== Nível 2 helpers (genérico) =====
+let logica={texto:'', resposta:''};
+function genSeq(){
+  const base = 2+Math.floor(Math.random()*3); const start=2; const a=[start];
+  for(let i=0;i<4;i++) a.push(a[a.length-1]*base);
+  logica.texto = a.slice(0,4).join(', ') + ', ?';
+  logica.resposta = String(a[4]);
+}
+function showNivel2(){
+  genSeq();
+  const s2 = document.getElementById('nivel2'); const s1 = document.getElementById('nivel1');
+  if(s1) s1.classList.add('hidden'); if(s2) s2.classList.remove('hidden');
+  const lab = document.getElementById('seqLogica'); if(lab) lab.innerText = logica.texto;
+  goToLevel(2);
+}
+async function validarNivel2(){
+  const val = document.getElementById('respostaLogica')?.value?.trim()||'';
+  if(val === logica.resposta){ alert('Correto. Avanças para o nível 3.'); await salvarProgresso(2,true); if(typeof showNivel3==='function') showNivel3(); }
+  else { falha(2); }
+}
+
+// ===== Nível 3 helpers (genérico) =====
+let reflexTimer=null; let clickWindow=1400;
+function showNivel3(){
+  const s2 = document.getElementById('nivel2'); const s3 = document.getElementById('nivel3');
+  if(s2) s2.classList.add('hidden'); if(s3) s3.classList.remove('hidden');
+  const arena = document.getElementById('arena'); if(!arena) return;
+  arena.innerHTML=''; const msg=document.getElementById('reflexMsg'); if(msg) msg.innerText = 'Aguarda pelo alvo...';
+  const delay = 700 + Math.random()*1500;
+  setTimeout(()=>spawnAlvo(arena), delay);
+}
+function spawnAlvo(arena){
+  const alvo = document.createElement('button');
+  alvo.className = 'absolute w-10 h-10 rounded-full bg-orange-500 text-black text-xs';
+  alvo.textContent = 'ALVO';
+  const maxX = arena.clientWidth - 40; const maxY = arena.clientHeight - 40;
+  alvo.style.left = Math.floor(Math.random()*maxX)+'px';
+  alvo.style.top  = Math.floor(Math.random()*maxY)+'px';
+  arena.appendChild(alvo);
+  reflexTimer = setTimeout(()=>{ if(arena.contains(alvo)) falha(3); }, clickWindow);
+  alvo.addEventListener('click', async ()=>{
+    clearTimeout(reflexTimer); arena.innerHTML='';
+    const msg=document.getElementById('reflexMsg'); if(msg) msg.innerText='Alvo atingido.';
+    await salvarProgresso(3,true); await salvarRanking(50);
+  });
+}
+</script>
+
 </body>
 </html>
