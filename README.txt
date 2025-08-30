@@ -1,1 +1,0 @@
-Use estes ficheiros na raiz do repositório para servir o jogo Nubbin™ (não a landing social).
